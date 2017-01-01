@@ -13,6 +13,9 @@
     Hover your mouse over me for a few seconds to see my dynamically bound title!
     </span>
 </div>
+<div id="example">
+    <p>{{ name }}は{{ priceWithTax }}円</p>
+</div>
 <script src="node_modules/vue/dist/vue.js"></script>
 <script>
     var app = new Vue({
@@ -26,6 +29,19 @@
         data: {
             message: 'You loaded this page on ' + new Date()
         }
+    });
+    var example = new Vue({
+        el: '#example',
+        data: {
+            name: 'みかん',
+            price: 100
+        },
+        computed: {
+            priceWithTax: function() {
+                return this.price * 1.08;
+            }
+        }
+
     });
 </script>
 </body>

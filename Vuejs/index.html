@@ -16,8 +16,31 @@
 <div id="example">
     <p>{{ name }}は{{ priceWithTax }}円</p>
 </div>
+<div id="list">
+    <li v-for="item in items" v-bind:key="item.name">
+        <p>{{item.name}}は{{item.price}}</p>
+    </li>
+</div>
+<div id="cond" v-bind:class="{'error':!isValid}" v-bind:style="{'border':(isValid?'':'1px solid red')}  ">
+    <p>名前 {{name}}</p>
+    <p v-show="!isValid">
+        名前を入力してください
+    </p>
+</div>
 <script src="node_modules/vue/dist/vue.js"></script>
 <script>
+    var cond = new Vue({
+        el: '#cond',
+        data: {
+              name: ""
+        },
+        computed: {
+            isValid: function () {
+                return this.name.length > 0;
+            }
+        }
+    });
+
     var app = new Vue({
         el: '#app',
         data: {
@@ -37,11 +60,34 @@
             price: 100
         },
         computed: {
-            priceWithTax: function() {
+            priceWithTax: function () {
                 return this.price * 1.08;
             }
         }
 
+    });
+    var list = new Vue({
+        el: "#list",
+        data: {
+            items: [
+                {
+                    name: 'みかん',
+                    price: 100
+                },
+                {
+                    name: 'もも',
+                    price: 200
+                },
+                {
+                    name: 'いちじく',
+                    price: 300
+                },
+                {
+                    name: 'メロン',
+                    price: 400
+                },
+            ]
+        }
     });
 </script>
 </body>

@@ -8,14 +8,29 @@
 <div id="fruits-list">
     <fruits-list-parent></fruits-list-parent>
 </div>
+<div id="fruits-component">
+    <ol>
+        <ftuits-list v-for="fruit in fruitsItems" fruit-items="fruits"></ftuits-list>
+    </ol>
+</div>
 <script src="node_modules/vue/dist/vue.js"></script>
 <script>
-    Vue.component('fruits-list-title', {
-        template: '<h1>フルーツ一覧</h1>'
+    Vue.component('fruits-list', {
+        props: ['fruitsItems'],
+        template: '<li>{{fruit.name}}</li>'
+    });
+    new Vue({
+        el: '#fruits-component',
+        data: {
+            fruits: [
+                {name: '梨'},
+                {name: 'イチゴ'}
+            ]
+        }
     });
 
     var fruitsListChild = Vue.extend({
-       template: '<h1>フルーツ一覧</h1>'
+        template: '<h1>フルーツ一覧</h1>'
     });
     var fruitsListParent = Vue.extend({
         template: '<div>おやコンポーネント<fruits-list-child></fruits-list-child></div>',

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <router-link to="/top">トップページ</router-link>
+    <router-link to="/users">ユーザー一覧</router-link>
+    <router-view></router-view>
+</div>
+
+<script src="https://cdn.jsdelivr.net/vue/2.0.3/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/vue.router/2.0.1/vue-router.min.js"></script>
+<script>
+    var router = new VueRouter({
+        routes: [
+            {
+                path: '/top',
+                component: {
+                    template: '<div>トップページです</div>'
+                }
+            },
+            {
+                path: '/users',
+                component: {
+                    template: '<div>ユーザー一覧ページです</div>'
+                }
+            }
+        ]
+    });
+    var app = new Vue({
+        router: router
+    }).$mount('#app');
+</script>
+</body>
+</html>

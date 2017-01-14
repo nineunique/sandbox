@@ -8,12 +8,32 @@
 <div id="app">
     <router-link to="/top">トップページ</router-link>
     <router-link to="/users">ユーザー一覧</router-link>
+    <router-link :to="{name:'user', params:{userId:123}}">ユーザー詳細</router-link>
     <router-view></router-view>
 </div>
 
 <script src="https://cdn.jsdelivr.net/vue/2.0.3/vue.min.js"></script>
 <script src="https://cdn.jsdelivr.net/vue.router/2.0.1/vue-router.min.js"></script>
 <script>
+    var User = {
+        template: '<div class="user">' +
+        '<h2>ユーザーIDは {{ $route.params.userId }} です。</h2>' +
+        '<router-link :to="\'/users/\' + $route.params.userId + \'/profile\'">ユーザーのプロフィールページを見る</router-link>' +
+        '<router-link :to="\'/users/\' + $route.params.userId + \'/posts\'">ユーザーの投稿ページを見る</router-link>' +
+        '<router-view></router-view>' +
+        '</div>'
+    };
+
+    var UserProfile = {
+        template: '<div class="user-profile">' +
+        '<h3>こちらはユーザー {{ $route.params.userId }} のプロフィールページです。</h3>' +
+        '</div>'
+    };
+    var UserPosts = {
+        template: '<div class="user-posts">' +
+        '<h3>こちらはユーザー {{ $route.params.userId }} の投稿ページです。</h3>' +
+        '</div>'
+    };
     var router = new VueRouter({
         routes: [
             {
@@ -30,9 +50,18 @@
             },
             {
                 path: '/users/:userId',
-                component: {
-                    template :'<div>ユーザーIDは{{$route.params.userId}}です</div>'
-                }
+                name: 'user',
+                component: User,
+                children: [
+                    {
+                        path: 'profile',
+                        component: UserProfile
+                    },
+                    {
+                        path: 'posts',
+                        component: UserPosts
+                    }
+                ]
             }
         ]
     });

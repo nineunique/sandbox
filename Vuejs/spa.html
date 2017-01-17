@@ -118,6 +118,18 @@
             }
         ]
     });
+
+    router.beforeEach(function (to, from, next) {
+        console.log(to.path);
+        // ユーザー一覧ページへアクセスした時に/topへリダイレクトする例
+        if (to.path === '/users') {
+
+            next('/top')
+        } else {
+            // 引数なしでnextを呼び出すと通常通りの遷移が行われる
+            next()
+        }
+    })
     var app = new Vue({
         router: router
     }).$mount('#app');

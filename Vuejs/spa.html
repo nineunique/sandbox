@@ -99,7 +99,15 @@
             },
             {
                 path: '/users',
-                component: UserList
+                component: UserList,
+                beforeEnter: function (to, from, next) {
+                    console.log(to.query.redirect);
+                    if (to.query.redirect == true) {
+                        next('/top')
+                    } else {
+                        next()
+                    }
+                }
             },
             {
                 path: '/users/:userId',
@@ -119,17 +127,17 @@
         ]
     });
 
-    router.beforeEach(function (to, from, next) {
-        console.log(to.path);
-        // ユーザー一覧ページへアクセスした時に/topへリダイレクトする例
-        if (to.path === '/users') {
-
-            next('/top')
-        } else {
-            // 引数なしでnextを呼び出すと通常通りの遷移が行われる
-            next()
-        }
-    })
+//    router.beforeEach(function (to, from, next) {
+//        console.log(to.path);
+//        // ユーザー一覧ページへアクセスした時に/topへリダイレクトする例
+//        if (to.path === '/users') {
+//
+//            next('/top')
+//        } else {
+//            // 引数なしでnextを呼び出すと通常通りの遷移が行われる
+//            next()
+//        }
+//    });
     var app = new Vue({
         router: router
     }).$mount('#app');

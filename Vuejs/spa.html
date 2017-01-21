@@ -30,6 +30,51 @@
             ])
         }, 1000)
     };
+
+    var Auth = {
+        login: function (email, pass, cb) {
+            setTimeout(function () {
+                if (email === 'vue@example.com' && pass === 'vue') {
+                    localStorage.token = Math.random().toString(36).substring(7)
+                    if (cb) {
+                        cb(true)
+                    }
+                } else {
+                    if (cb) {
+                        cb(false)
+                    }
+                }
+            }, 0)
+        },
+        logout: function () {
+            delete localStorage.token;
+        },
+        loggedIn: function () {
+          return !!localStorage.token;
+        }
+
+    };
+    var Login = {
+        template: '#login',
+        data: function () {
+            return {
+                email: 'vue@example.com',
+                pass: '',
+                error: false
+            }
+        },
+        methods: {
+            login: function () {
+                Auth.login(this.email, this.pass, (function (loggedIn) {
+                    if (!loggedIn) {
+                        this.error = true
+                    } else {
+                        this.$router.replace(this.$route.query.redirect || '/')
+                    }
+                }).bind(this))
+            }
+        }
+    }
     var UserList = {
         // HTML上のscriptタグのidを指定する
         template: '#user-list',
@@ -113,6 +158,16 @@
                 path: '/users/:userId',
                 name: 'user',
                 component: User,
+                beforeEnter: function(to, from, next) {
+                    if(!Auth.loggedIn()) {
+                        next({
+                            path: '/login',
+                            query:{ redirect: to.fullPath}
+                        });
+                    } else {
+                        next();
+                    }
+                },
                 children: [
                     {
                         path: 'profile',
@@ -123,21 +178,32 @@
                         component: UserPosts
                     }
                 ]
+            },
+            {
+                path: '/login',
+                component: Login
+            },
+            {
+                path: '/logout',
+                beforeEnter: function (to, from, next) {
+                    Auth.logout();
+                    next('/')
+                }
             }
         ]
     });
 
-//    router.beforeEach(function (to, from, next) {
-//        console.log(to.path);
-//        // ユーザー一覧ページへアクセスした時に/topへリダイレクトする例
-//        if (to.path === '/users') {
-//
-//            next('/top')
-//        } else {
-//            // 引数なしでnextを呼び出すと通常通りの遷移が行われる
-//            next()
-//        }
-//    });
+    //    router.beforeEach(function (to, from, next) {
+    //        console.log(to.path);
+    //        // ユーザー一覧ページへアクセスした時に/topへリダイレクトする例
+    //        if (to.path === '/users') {
+    //
+    //            next('/top')
+    //        } else {
+    //            // 引数なしでnextを呼び出すと通常通りの遷移が行われる
+    //            next()
+    //        }
+    //    });
     var app = new Vue({
         router: router
     }).$mount('#app');
@@ -152,6 +218,20 @@
         <div v-for="user in users" :key="user.id">
             <h2>{{ user.name }}</h2>
         </div>
+    </div>
+</script>
+<script type="x-template" id="login">
+    <div>
+        <h2>Login</h2>
+        <p v-if="$route.query.redirect">
+            ログインしてください
+        </p>
+        <form @submit.prevent="login">
+            <label><input v-model="email" placeholder="email"></label>
+            <label><input v-model="pass" placeholder="password" type="password"></label><br>
+            <button type="submit">ログイン</button>
+            <p v-if="error" class="error">ログインに失敗しました</p>
+        </form>
     </div>
 </script>
 </body>

@@ -2,12 +2,12 @@ import Vue from 'vue'
 import Hello from 'src/components/Hello'
 
 describe('Hello.vue', () => {
-  it('should render correct contents', () => {
+  it('should render correct content s', () => {
     const vm = new Vue({
-      el: document.createElement('div'),
+      el: document.createElement('p'),
       render: (h) => h(Hello)
-    })
-    expect(vm.$el.querySelector('.hello h1').textContent)
-      .to.equal('Welcome to Your Vue.js App')
+    });
+    expect(vm.$el.textContent)
+      .to.equal('メッセージ: こんにちは！!!!!!!!!!!!!!!!')
   })
-})
+});
